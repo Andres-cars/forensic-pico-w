@@ -135,7 +135,6 @@ echo   GENERANDO VOLCADO DE MEMORIA RAM (FTK Imager)
 echo ============================================================
 echo.
 
-:: Verificar que procdump.exe existe
 if exist C:\EVIDENCIAS_COMPLETAS\procdump.exe (
     echo Ejecutando procdump.exe...
     C:\EVIDENCIAS_COMPLETAS\procdump.exe -ma -accepteula C:\EVIDENCIAS_COMPLETAS\memory.dmp
